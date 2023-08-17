@@ -9,14 +9,22 @@ require('dotenv').config()
 app.use(express.json())
 app.use(cors())
 
+const PORT = process.env.PORT || 3001
 
 
-mongoose.connect(process.env.MONGODB_URL,{
- 
-})
-
+const connectDB = async () => {
+    try {
+      const conn = await mongoose.connect(process.env.MONGODB_URI);
+      console.log(`MongoDB Connected: ${conn.connection.host}`);
+    } catch (error) {
+      console.log(error);
+      process.exit(1);
+    }
+  }
 app.use('/api/Items', ItemRouter)
 
-app.listen(3001,()=>{
-    console.log('Server Running on Port 3001')
+connectDB().then(() => {
+    app.listen(PORT, () => {
+        console.log("listening for requests");
+    })
 })
