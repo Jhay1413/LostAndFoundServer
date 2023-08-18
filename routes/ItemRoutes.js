@@ -17,6 +17,7 @@ async function handleUpload(file) {
 }
 router.get('/getAllItems', async (req,res)=>{
     ItemDetailsModel.find()
+        .sort({ Date: -1 })
         .then(items =>res.json(items))
         .catch(err=>res.status(400).json('error:' + err));
 })
