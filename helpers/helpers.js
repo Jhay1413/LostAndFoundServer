@@ -14,7 +14,6 @@ let model;
 
 
 const handleUpload = async (file) =>{
-  const options = {folder:'item-image'}
   const res = await cloudinary.uploader.upload(file,{
       resource_type:"auto",
       folder:"lostImage"

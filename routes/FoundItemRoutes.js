@@ -12,7 +12,6 @@ router.get('/getAllItems', async (req,res)=>{
         .catch(err=>res.status(400).json('error:' + err));
 })
 router.post('/insertItems',upload.single("image"), async (req,res)=>{
-    const ItemData = req.body;
    
     try {
                 const b64 = Buffer.from(req.file.buffer).toString("base64");
@@ -37,8 +36,6 @@ router.post('/insertItems',upload.single("image"), async (req,res)=>{
                 else{
                     res.json("image not uploaded to database");
                 }
-               
-
     } catch (error) {
         console.error(error);
         res.status(500).send('Server Error ! ');

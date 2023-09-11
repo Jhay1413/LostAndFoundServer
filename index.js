@@ -2,7 +2,6 @@ const express = require('express')
 const mongoose = require('mongoose')
 const app = express();
 const cors = require('cors');
-const cloudinary = require("cloudinary").v2;
 const FoundItemRouter = require('./routes/FoundItemRoutes')
 const AccountRouter = require('./routes/AccountRoutes')
 const MatchItemRouter = require('./routes/MatchItemRoutes')

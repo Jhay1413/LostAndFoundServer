@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs')
 const AccountDetailsModel = require('../models/Account');
-const asyncHandler = require('express-async-handler')
 const jwt = require('jsonwebtoken');
 
 router.post('/insertAccount',async(req,res)=>{

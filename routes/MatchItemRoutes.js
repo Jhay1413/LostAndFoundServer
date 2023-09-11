@@ -3,11 +3,9 @@ const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({storage: storage})
 const {
-    extractImageFeatures,
     extractImageFeaturesFromBuffer,
     downloadImage,
     computeCosineSimilarity,
-    getImagesFromFolder,
     handleUpload
 } = require('../helpers/helpers');
 const MatchItemModel = require('../models/MatchItemModel');
