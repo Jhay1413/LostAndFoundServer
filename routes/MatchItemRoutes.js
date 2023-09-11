@@ -1,6 +1,5 @@
 const router = require ('express').Router();
 const multer = require('multer');
-const LostItemModel = require('../models/MatchItemModel');
 const storage = multer.memoryStorage();
 const upload = multer({storage: storage})
 const {
@@ -14,12 +13,9 @@ const {
 const MatchItemModel = require('../models/MatchItemModel');
 const FoundItemModel = require('../models/foundItemModel');
 const twilio = require('twilio');
-const AccountDetailsModel = require('../models/Account');
+require('dotenv').config()
 
-const accountSid = 'AC3773c98dd63c53a83ad35629ab40f665';
-const authToken = 'e83cad08d25ecb72a5761b26caacd40c';
-
-const client = new twilio(accountSid, authToken);
+const client = new twilio(process.env.TWILIO_ACOCUNT_SID, process.env.TWILIO_ACCOUNT_AUTHTOKEN);
 
 
 //ADMIN CONFIRMING MATCH ITEMS WITH SMS
@@ -41,7 +37,7 @@ router.put('/ConfirmMatchItems',async(req,res)=>{
                 client.messages.create({
                     body: body,
                     to: userContact,
-                    from: '+15015884658'
+                    from: process.env.TWILIO_ACCOUNT_NUMBER
                 })
                 .then((message) => {
                     res.send(message.sid);
