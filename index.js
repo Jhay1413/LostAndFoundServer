@@ -3,7 +3,9 @@ const mongoose = require('mongoose')
 const app = express();
 const cors = require('cors');
 const cloudinary = require("cloudinary").v2;
-const ItemRouter = require('./routes/ItemRoutes')
+const FoundItemRouter = require('./routes/FoundItemRoutes')
+const AccountRouter = require('./routes/AccountRoutes')
+const MatchItemRouter = require('./routes/MatchItemRoutes')
 require('dotenv').config()
 
 app.use(express.json())
@@ -21,8 +23,9 @@ const connectDB = async () => {
       process.exit(1);
     }
   }
-app.use('/api/Items', ItemRouter)
-
+app.use('/api/FoundItems', FoundItemRouter)
+app.use('/api/Accounts',AccountRouter)
+app.use('/api/MatchItems',MatchItemRouter)
 connectDB().then(() => {
     app.listen(PORT, () => {
         console.log("listening for requests");

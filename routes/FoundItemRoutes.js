@@ -1,20 +1,10 @@
 const router = require('express').Router();
 const multer = require('multer');
-const ItemDetailsModel = require('../models/Items')
+const ItemDetailsModel = require('../models/foundItemModel');
+const { handleUpload } = require('../helpers/helpers');
+
 const storage = multer.memoryStorage();
 const upload = multer({storage: storage})
-const cloudinary = require('cloudinary').v2
-cloudinary.config({ 
-    cloud_name: 'dzry3teae', 
-    api_key: '331924875182981', 
-    api_secret: 'h3XBeI36w5wppWYLvynGouYUnh8' 
-  });
-async function handleUpload(file) {
-    const res = await cloudinary.uploader.upload(file, {
-      resource_type: "auto",
-    });
-    return res;
-}
 router.get('/getAllItems', async (req,res)=>{
     ItemDetailsModel.find()
         .sort({ Date: -1 })
@@ -23,20 +13,20 @@ router.get('/getAllItems', async (req,res)=>{
 })
 router.post('/insertItems',upload.single("image"), async (req,res)=>{
     const ItemData = req.body;
-
+   
     try {
                 const b64 = Buffer.from(req.file.buffer).toString("base64");
                 const dataURI = `data:${req.file.mimetype};base64,${b64}`;
                 const cldres = await handleUpload(dataURI);
-
+                const status = "Not Found"
                 if(cldres.secure_url){
-                    const imageUrl = cldres.secure_url
                     const newItem = new ItemDetailsModel({
-                        ItemCategory: req.body.category,
-                        ItemBrand:req.body.brand,
-                        ItemColor:req.body.color,
-                        imageUrl:imageUrl,
-                      
+                        ImageUrl : cldres.secure_url,
+                        ItemCategory: req.body.ItemCategory,
+                        ItemTypes: req.body.ItemTypes,
+                        ItemBrand : req.body.ItemBrand,
+                        ItemColor : req.body.ItemColor,
+                        Status : status,
                     });
                     newItem.save()
                     .then(()=>{
@@ -58,13 +48,15 @@ router.post('/insertItems',upload.single("image"), async (req,res)=>{
 router.put('/updateItem/:id',upload.single("image"), async (req,res)=>{
     const {id} = req.params;
     const itemData = req.body;
-    
+    const status = "Not Found"
     try {
         const item = await ItemDetailsModel.findById(id);
 
-        item.ItemCategory = itemData.category;
-        item.ItemBrand = itemData.brand;
-        item.ItemColor = itemData.color;
+        item.ItemCategory = itemData.ItemCategory;
+        item.ItemTypes = itemData.ItemTypes;
+        item.ItemBrand = itemData.ItemBrand;
+        item.ItemColor = itemData.ItemColor;
+        item.ItemStatus = status;
 
         if(!item){
             return res.status(404).json({message:"Item not found ! "})
@@ -76,11 +68,11 @@ router.put('/updateItem/:id',upload.single("image"), async (req,res)=>{
             const cldres = await handleUpload(dataURI);
 
             if(cldres.secure_url){
-                item.imageUrl = cldres.secure_url;
+                item.ImageUrl = cldres.secure_url;
             }
         }
         else{
-            item.imageUrl = itemData.imageURL;
+            item.ImageUrl = itemData.ItemImageUrl;
         }
 
         await item.save();
