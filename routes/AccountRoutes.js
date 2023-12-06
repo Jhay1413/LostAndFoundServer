@@ -52,7 +52,6 @@ router.post('/loginAuth',async(req,res)=>{
     const {email,password} = req.body
 
     const user = await AccountDetailsModel.findOne({email}).populate('user')
-    console.log(user)
     try {
         if(user && (await bcrypt.compare(password,user.password))){
             const token = generateToken(user._id)
