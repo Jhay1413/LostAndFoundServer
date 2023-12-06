@@ -1,14 +1,16 @@
 const mongoose = require('mongoose')
 
 const AccountDetailsSchema = new mongoose.Schema({
-    firstName:String,
-    lastName:String,
+    user:{
+        type:mongoose.SchemaTypes.ObjectId,
+        ref:'UserRecords'
+    },
     contact:String,
     address:String,
-    age:Number,
     email:String,
     password:String,
-    userRoles:Number
+    userRoles:Number,
+    imageUrl:String
 
 })
 const AccountDetailsModel = mongoose.model('Accounts',AccountDetailsSchema,'Accounts')

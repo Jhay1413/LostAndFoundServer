@@ -5,6 +5,9 @@ const cors = require('cors');
 const FoundItemRouter = require('./routes/FoundItemRoutes')
 const AccountRouter = require('./routes/AccountRoutes')
 const MatchItemRouter = require('./routes/MatchItemRoutes')
+const StudentRoute = require('./routes/StudentRecordRoutes')
+const EmployeeRoute = require('./routes/EmployeeRecordRoutes');
+const UserRecord = require('./routes/UserRecord')
 require('dotenv').config()
 
 app.use(express.json())
@@ -25,6 +28,9 @@ const connectDB = async () => {
 app.use('/api/FoundItems', FoundItemRouter)
 app.use('/api/Accounts',AccountRouter)
 app.use('/api/MatchItems',MatchItemRouter)
+app.use('/api/StudentRoutes',StudentRoute);
+app.use('/api/EmployeeRoutes',EmployeeRoute);
+app.use('/api/UserRecord',UserRecord);
 connectDB().then(() => {
     app.listen(PORT, () => {
         console.log("listening for requests");

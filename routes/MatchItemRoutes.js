@@ -17,48 +17,59 @@ const client = new twilio(process.env.TWILIO_ACOCUNT_SID, process.env.TWILIO_ACC
 
 
 //ADMIN CONFIRMING MATCH ITEMS WITH SMS
-router.put('/ConfirmMatchItems',async(req,res)=>{
-    const {_id} = req.body
-    const matchId = req.body.matchWith._id
-    const userContact = req.body.userId.contact;
-    const body = "Hi your item has been found please visit the evsu saso building thanks"
+router.put('/updateStatus',async(req,res)=>{
+    const status = req.body.status
+    const {_id} = req.body.data
+    const matchId = req.body.data.matchWith._id
+    const userContact = req.body.data.userId.contact;
+    const body = "There is a match found with youor lost item,please visit EVSU SASO !"
     try {
         //UPDATING ITEM STATUS FROM USER LOST ITEM
-        const matchItem = await MatchItemModel.findByIdAndUpdate(_id,{Status:'Found'})
+        const matchItem = await MatchItemModel.findByIdAndUpdate(_id,{Status:status})
 
-        if(matchItem){
-            //UPDATING ITEM STATUS FROM ADMIN FOUND ITEM
-            const matchWith = await FoundItemModel.findByIdAndUpdate(matchId,{Status:'Found'})
-          
-            if(matchWith){
-                //SMS FOR NOTIFICATION ON USERS
-                client.messages.create({
-                    body: body,
-                    to: userContact,
-                    from: process.env.TWILIO_ACCOUNT_NUMBER
-                })
-                .then((message) => {
-                    res.send(message.sid);
-                })
-                .catch((error) => {
-                    res.send(error);
-                });
+        
+            if(matchItem){
+                if(status == "Found"){
+                    const matchWith = await FoundItemModel.findByIdAndUpdate(matchId,{Status:status})
+            
+                    if(matchWith){
+                        //SMS FOR NOTIFICATION ON USERS
+                        client.messages.create({
+                            body: body,
+                            to: userContact,
+                            from: process.env.TWILIO_ACCOUNT_NUMBER
+                        })
+                        .then((message) => {
+                            res.send(message.sid);
+                        })
+                        .catch((error) => {
+                            res.send(error);
+                        });
+                    }
+
+                }
+                else{
+                    const matchWith = await FoundItemModel.findByIdAndUpdate(matchId,{Status:status})
+                    matchWith ? res.json("Success") : res.json("Not found")
+                }
+                //UPDATING ITEM STATUS FROM ADMIN FOUND ITE
             }
-        }
-        else{
-            res.json({message:"Item not Found !"})
-        }
-       
+            else{
+                res.json("Not found");
+            }
+
+            
+        
     } catch (error) {
         console.log(error)
     }
 })
   
 //ADMIN GETTING ALL THE PENDING REQUEST
-router.get('/GetAllPendingRequest',async(req,res)=>{
+router.get('/GetAllRequest',async(req,res)=>{
     try {
         //GETTING ALL ITEM THAT HAS PENDING STATUS POPULATED BY FOUND ITEM AND USER DATA
-        const data = await MatchItemModel.find({Status : "Pending"}).populate('matchWith').populate('userId')
+        const data = await MatchItemModel.find({}).populate('matchWith').populate('userId')
         res.json(data);
     } catch (error) {
         console.log("Server Error",error)

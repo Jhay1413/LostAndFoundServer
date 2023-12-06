@@ -12,6 +12,7 @@ router.get('/getAllItems', async (req,res)=>{
         .catch(err=>res.status(400).json('error:' + err));
 })
 router.post('/insertItems',upload.single("image"), async (req,res)=>{
+
    
     try {
                 const b64 = Buffer.from(req.file.buffer).toString("base64");
@@ -25,7 +26,9 @@ router.post('/insertItems',upload.single("image"), async (req,res)=>{
                         ItemTypes: req.body.ItemTypes,
                         ItemBrand : req.body.ItemBrand,
                         ItemColor : req.body.ItemColor,
-                        Status : status,
+                        DateFound:req.body.dateFound,
+                        ReturnedBy:req.body.returnedBy,
+                        Status : status
                     });
                     newItem.save()
                     .then(()=>{

@@ -10,6 +10,8 @@ const FoundItemSchema = new mongoose.Schema({
     ItemBrand : String,
     ItemColor :String,
     Status: String,
+    DateFound:String,
+    ReturnedBy:String,
     Date:{
         type:Date,
         default:getPhilippineTime
