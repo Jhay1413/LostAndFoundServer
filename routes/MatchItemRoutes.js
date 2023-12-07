@@ -41,9 +41,11 @@ router.put('/updateStatus',async(req,res)=>{
                         })
                         .then((message) => {
                             res.send(message.sid);
+                            console.log(message.sid);
                         })
                         .catch((error) => {
                             res.send(error);
+                            console.log(error);
                         });
                     }
 
