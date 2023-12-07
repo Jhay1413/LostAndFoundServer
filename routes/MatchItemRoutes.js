@@ -71,7 +71,12 @@ router.put('/updateStatus',async(req,res)=>{
 router.get('/GetAllRequest',async(req,res)=>{
     try {
         //GETTING ALL ITEM THAT HAS PENDING STATUS POPULATED BY FOUND ITEM AND USER DATA
-        const data = await MatchItemModel.find({}).populate('matchWith').populate('userId')
+        const data = await MatchItemModel.find({}).populate('matchWith').populate('userId') .populate({
+            path: 'userId',
+            populate: {
+              path: 'user',
+            },
+          });
         res.json(data);
     } catch (error) {
         console.log("Server Error",error)
